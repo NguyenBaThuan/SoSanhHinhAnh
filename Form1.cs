@@ -32,7 +32,9 @@ namespace SerialPort
         {
             ptb1.Image = Image.FromFile(e.FullPath);
             listPicture.Add(e.FullPath);
-            lb.Items.Add(listPicture[listPicture.Count-1]);
+            //lb.Items.Add(listPicture[listPicture.Count - 1]);
+            lb.DataSource = listPicture.AsEnumerable().Reverse().ToList();
+
             if (listPicture.Count >= 2)
             {
                 ptb2.Image = Image.FromFile(listPicture[listPicture.Count - 2]);
@@ -45,7 +47,7 @@ namespace SerialPort
                     {
                         listResult.Add("Tỉ lệ: " + tile + " - KQ: " + " Đứng yên" + " Time: " + DateTime.Now.ToString("hh:mm:ss"));
                         //lbCompare.Items.Add("Tỉ lệ: " + tile +  " - KQ: " + " Đứng yên" +" Time: "+DateTime.Now.Second);
-                       
+
                     }
                     else
                     {
@@ -55,16 +57,14 @@ namespace SerialPort
                     }
                     var temp = listResult.AsEnumerable().Reverse();
                     lbCompare.DataSource = temp.ToList();
-                    
 
 
+                
                 }
-                
-                
             }
-            
-            
-            
+
+
+
         }
         public static List<bool> GetHash(Bitmap bmpSource)
         {
@@ -99,13 +99,13 @@ namespace SerialPort
             tile = Math.Round(tile, 2);
             if (tile > 80)
             {
-                MessageBox.Show("Tỉ lệ: "+tile+" - Ảnh Hiện Tại: " + ptb1.Name + " - Ảnh trước: " + ptb2.Name + " - KQ: " + " Đứng yên");
+                MessageBox.Show("Tỉ lệ: " + tile + " - Ảnh Hiện Tại: " + ptb1.Name + " - Ảnh trước: " + ptb2.Name + " - KQ: " + " Đứng yên");
             }
             else
             {
-                MessageBox.Show("Tỉ lệ: "+tile+" - Ảnh Hiện Tại: " + ptb1.Name + " - Ảnh trước: " + ptb2.Name + " - KQ: " + " Chuyển động");
+                MessageBox.Show("Tỉ lệ: " + tile + " - Ảnh Hiện Tại: " + ptb1.Name + " - Ảnh trước: " + ptb2.Name + " - KQ: " + " Chuyển động");
             }
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
