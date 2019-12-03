@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace SerialPort
 {
     public partial class Form1 : Form
     {
 
-
+        System.Diagnostics.Process proc;
 
         private List<string> listPicture;
         private List<string> listResult;
@@ -109,7 +110,31 @@ namespace SerialPort
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                string path = @"C:\out";
+                deleteFile(path);
+            }
+            catch (Exception)
+            {
+
+                //throw;
+            }
             ExecuteCommandAsync("java code.SimpleRead");
+        }
+
+        void deleteFile(string path)
+        {
+            System.IO.DirectoryInfo di = new DirectoryInfo(path);
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
         }
 
         public void ExecuteCommandSync(object command)
@@ -131,7 +156,7 @@ namespace SerialPort
                 // Do not create the black window.
                 procStartInfo.CreateNoWindow = true;
                 // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc = new System.Diagnostics.Process();
                 proc.StartInfo = procStartInfo;
                 proc.Start();
                 // Get the output into a string
@@ -169,6 +194,24 @@ namespace SerialPort
             catch (Exception objException)
             {
                 // Log the exception
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!proc.HasExited)
+            {
+                proc.Kill();
+            }
+
+            killProcess();
+        }
+        void killProcess()
+        {
+            Process[] localByName = Process.GetProcessesByName("java");
+            foreach (Process p in localByName)
+            {
+                p.Kill();
             }
         }
     }
